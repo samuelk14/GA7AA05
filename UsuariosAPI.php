@@ -30,7 +30,9 @@
                         }
                 }
                 function procesaListar(){
-                        if($_GET['action']=='usuarios'){ //se verifica la acción y se verifica que actúe sobre la tabla usuarios
+                        if(isset($_GET['action'])){
+                                $action = $_GET['action'];
+                                if($action=='usuarios'){ //se verifica la acción y se verifica que actúe sobre la tabla usuarios
                                 $usuariosDB = new UsiariosDB();// aquí se instancia un objeto de la clase usuariosdb
                                 if(isset($_GET['id'])){ // se solicita un registro por id
                                         $response = $usuariosDB->dameUnoPorId($_GET['id']);
@@ -39,7 +41,9 @@
                                         $response = $usuariosDB->dameLista(); // de lo contrario, manda la lista completa
                                         echo json_encode($response, JSON_PRETTY_PRINT); // muestra la lista en formato json
                                 }
-                        } else{
+                        }
+                        }                        
+                        else{
                                 $this->response(400);
                         }
                 }

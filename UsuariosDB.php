@@ -10,9 +10,8 @@
         */
         public function __construct() {
             try{
-                $this->mysqli = new mysqli(self::LOCALHOST,
-                self::USER, self::PASSWORD, self::DATABASE);
-            }catch (mysqli_sql_exception $e){
+                $this->mysqli = new mysqli(self::LOCALHOST, self::USER, self::PASSWORD, self::DATABASE);
+            } catch (mysqli_sql_exception $e){
                 http_response_code(500);
                 exit;
             }
