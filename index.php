@@ -39,28 +39,6 @@
         }
     }
 
-    //Actualizar usuario
-    if($_SERVER['REQUEST_METHOD'] == 'PUT'){
-        $sql = "UPDATE usuarios SET usuario=:usuario, password=:password WHERE id=:id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':id', $_GET['id']);
-        $stmt->bindValue(':usuario', $_GET['usuario']);
-        $stmt->bindValue(':password', $_GET['password']);
-        $stmt->execute();
-        header("HTTP/1.1 200 OK");
-        exit;
-    }
-
-    //Eliminar usuario
-    if($_SERVER['REQUEST_METHOD'] == 'DELETE'){
-        $sql = "DELETE FROM usuarios WHERE id=:id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':id', $_GET['id']);
-        $stmt->execute();
-        header("HTTP/1.1 200 OK");
-        exit;
-    }
-
     //Si no es ningun metodo
     header("HTTP/1.1 400 Bad Request");
 ?>
