@@ -5,23 +5,25 @@
 
     //Listar usuarios y consultar usuarios
     if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        if(isset($_GET['id'])){
-            $sql = $pdo->prepare("SELECT * FROM usuarios WHERE id=:id");
-            $sql->bindValue(':id', $_GET['id']);
+        if(isset($_GET['usuario']) and isset($_GET['password'])){
+            $sql = $pdo->prepare("SELECT * FROM usuarios WHERE usuario=:usuario and password=:password");
+            $sql->bindValue(':usuario', $_GET['usuario']);
+            $sql->bindValue(':password', $_GET['password']);
             $sql->execute();
             $sql->setFetchMode(PDO::FETCH_ASSOC);
-            header("HTTP/1.1 200 OK");
-            echo json_encode($sql->fetchAll());
-            exit;
+            $resultado = $sql->fetchAll();
 
-        } else{
-            $sql = $pdo->prepare("SELECT * FROM usuarios");
-            $sql->execute();
-            $sql->setFetchMode(PDO::FETCH_ASSOC);
-            header("HTTP/1.1 200 OK");
-            echo json_encode($sql->fetchAll());
-            exit;
-        }         
+            if (empty($resultado)) {
+                header("HTTP/1.1 401 Unauthorized");
+                echo "Usuario no registrado";
+            } else {
+                header("HTTP/1.1 200 Usuario autenticado");
+                echo "Usuario registrado";
+                echo "\n";
+                echo json_encode($resultado);
+                exit;
+            }        
+        }
     }
 
     //Insertar usuario
@@ -33,8 +35,8 @@
         $stmt->execute();
         $idPost = $pdo->lastInsertId();
         if($idPost){
-            header("HTTP/1.1 201 Creacion de producto OK");
-            echo json_encode($idPost);
+            header("HTTP/1.1 201 Usuario registrado");
+            echo "Registro exitoso";
             exit;
         }
     }
