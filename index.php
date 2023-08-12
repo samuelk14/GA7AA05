@@ -4,11 +4,11 @@
     $pdo = new Conexion();
 
     //Listar usuarios y consultar usuarios
-    if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        if(isset($_GET['usuario']) and isset($_GET['password'])){
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        if(isset($_POST['usuario']) and isset($_POST['password'])){
             $sql = $pdo->prepare("SELECT * FROM usuarios WHERE usuario=:usuario and password=:password");
-            $sql->bindValue(':usuario', $_GET['usuario']);
-            $sql->bindValue(':password', $_GET['password']);
+            $sql->bindValue(':usuario', $_POST['usuario']);
+            $sql->bindValue(':password', $_POST['password']);
             $sql->execute();
             $sql->setFetchMode(PDO::FETCH_ASSOC);
             $resultado = $sql->fetchAll();
@@ -21,26 +21,15 @@
                 echo "Usuario registrado";
                 echo "\n";
                 echo json_encode($resultado);
-                exit;
-            }        
-        }
-    }
-
-    //Insertar usuario
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        $sql = "INSERT INTO usuarios (usuario, password) VALUES(:usuario, :password)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':usuario', $_POST['usuario']);
-        $stmt->bindValue(':password', $_POST['password']);
-        $stmt->execute();
-        $idPost = $pdo->lastInsertId();
-        if($idPost){
-            header("HTTP/1.1 201 Usuario registrado");
-            echo "Registro exitoso";
+                
+            }  
+            exit;      
+        } else{
+            //Si no es ningun metodo
+            header("HTTP/1.1 400 Bad Request");
+            echo "Faltan datos de autenticación o verifique el metodo";
             exit;
         }
     }
-
-    //Si no es ningun metodo
-    header("HTTP/1.1 400 Bad Request");
+    
 ?>
